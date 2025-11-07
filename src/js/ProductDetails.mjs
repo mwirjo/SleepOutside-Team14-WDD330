@@ -1,4 +1,6 @@
-import { getLocalStorage, setLocalStorage} from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+const BASE_IMAGE_PATH = "../public/";
+
 export default class ProductDetails {
     constructor(productId, dataSource){
     this.productId = productId;
@@ -31,11 +33,14 @@ export default class ProductDetails {
 }
 
 function productDetailsTemplate(product) {
+
+  
   document.querySelector("h2").textContent = product.Brand.Name;
   document.querySelector("h3").textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById("productImage");
-  productImage.src = product.Image;
+  let imagePath = product.Image.replace(/^(\.\.\/)+/, ""); 
+  productImage.src = BASE_IMAGE_PATH + imagePath;
   productImage.alt = product.NameWithoutBrand; 
 
   document.getElementById("productPrice").textContent = product.FinalPrice;

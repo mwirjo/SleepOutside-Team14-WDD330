@@ -1,19 +1,25 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
 function productCardTemplate(product) {
+  // 🧹 Clean up any "../" at the start of the image path
+  let imagePath = product.Image.replace(/^(\.\.\/)+/, "");
+
+  
+
   return `
     <li class="product-card">
-      <a href="product_pages/?products=${product.Id}">
-        <img src="${product.Image}" alt="${product.Name}">
+      <a href="product_pages/?product=${product.Id}">
+        <img src="../public/${imagePath}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.Name}</h3>
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
     </li>
-    `;
+  `;
 }
 
-export default class ProductList {
+
+export default class ProductList {s
     constructor(category, dataSource, listElement) {
         this.category = category;
         this.dataSource = dataSource;
