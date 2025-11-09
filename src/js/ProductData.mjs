@@ -9,12 +9,12 @@ function convertToJson(res) {
 export default class ProductData {
   constructor(category) {
     this.category = category;
-    this.path = `../json/${this.category}.json`;
-  }
-  async getData() {
-    const res = await fetch(this.path);
-    const data = await convertToJson(res);
-    return data;
+    this.path = `/json/${this.category}.json`;
+  } // removed ../public because the vite(?) server was complaining and I couldn't add to cart
+  getData() {
+    return fetch(this.path)
+      .then(convertToJson)
+      .then((data) => data);
   }
   async findProductById(id) {
     const products = await this.getData();
