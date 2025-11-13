@@ -9,8 +9,8 @@ function convertToJson(res) {
 export default class ProductData {
   constructor(category) {
     this.category = category;
-    this.path = `../public/json/${this.category}.json`;
-  }
+    this.path = `/json/${this.category}.json`;
+  } // removed ../public because the vite(?) server was complaining and I couldn't add to cart
   getData() {
     return fetch(this.path)
       .then(convertToJson)
