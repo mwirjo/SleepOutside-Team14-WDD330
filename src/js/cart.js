@@ -38,11 +38,11 @@ function renderCartContents() {
 
 // Cart item HTML template with remove button including data-index
 function cartItemTemplate(item, index) {
-  let imagePath = item.Image.replace(/^(\.\.\/)+/, "");
+  
   return `
     <li class="cart-card divider">
       <a href="#" class="cart-card__image">
-        <img src="../public/${imagePath}" alt="${item.Name}" />
+        <img src="${item.Image}" alt="${item.Name}" />
       </a>
       <a href="#">
         <h2 class="card__name">${item.Name}</h2>

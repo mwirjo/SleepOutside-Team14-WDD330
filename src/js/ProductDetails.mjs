@@ -39,9 +39,8 @@ function productDetailsTemplate(product) {
   document.querySelector("h3").textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById("productImage");
-  let imagePath = product.Image.replace(/^(\.\.\/)+/, ""); 
-  productImage.src = BASE_IMAGE_PATH + imagePath;
-  productImage.alt = product.NameWithoutBrand; 
+  productImage.src = product.Image;
+  productImage.alt = product.NameWithoutBrand;
 
   document.getElementById("productPrice").textContent = product.FinalPrice;
   document.getElementById("productColor").textContent = product.Colors[0].ColorName;
