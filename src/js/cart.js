@@ -1,27 +1,44 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs"; // Make sure setLocalStorage is defined properly
 
-
+// Render cart contents, showing items and total or empty message
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
-  document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  const productListElem = document.querySelector(".product-list");
+  const cartFooter = document.querySelector(".cart-footer");
+  const cartTotalElem = document.querySelector(".cart-total");
 
-  // if not empty then calculate price and make the hidden div element visible
-  if (htmlItems != []) {
-    const total = cartItems.reduce((accumulator, object) => {
-      return accumulator + object.FinalPrice;
-    }, 0);
-    
-    document.querySelector(".cart-footer").style.visibility = "visible";
-    document.querySelector(".cart-total").innerHTML = `Total: $${total}`;
-  } // NO SEPERATE FUNCTION ! ! TOO LATE
+  if (cartItems.length === 0) {
+    productListElem.innerHTML = `
+      <li class="empty-cart-message">Your cart is currently empty.</li>
+    `;
+    cartFooter.style.visibility = "hidden";
+    return 0;
+  }
+
+  // Render cart items
+  const htmlItems = cartItems.map((item, index) => cartItemTemplate(item, index));
+  productListElem.innerHTML = htmlItems.join("");
+
+  // Add event listeners for remove buttons
+  document.querySelectorAll(".remove-item-btn").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const idx = parseInt(e.target.dataset.index, 10);
+      removeItemFromCart(idx);
+    });
+  });
+
+  // Calculate and show total
+  const total = cartItems.reduce((accumulator, item) => accumulator + item.FinalPrice, 0);
+  cartFooter.style.visibility = "visible";
+  cartTotalElem.textContent = `Total: $${total.toFixed(2)}`;
+
+  return total;
 }
 
-function cartItemTemplate(item) {
-  // 🧹 Normalize any "../" and ensure 'public/' prefix
+// Cart item HTML template with remove button including data-index
+function cartItemTemplate(item, index) {
   let imagePath = item.Image.replace(/^(\.\.\/)+/, "");
-
-  const newItem = `
+  return `
     <li class="cart-card divider">
       <a href="#" class="cart-card__image">
         <img src="../public/${imagePath}" alt="${item.Name}" />
@@ -32,10 +49,29 @@ function cartItemTemplate(item) {
       <p class="cart-card__color">${item.Colors[0].ColorName}</p>
       <p class="cart-card__quantity">qty: 1</p>
       <p class="cart-card__price">$${item.FinalPrice}</p>
+      <button class="remove-item-btn" data-index="${index}" type="button">Remove</button>
     </li>
   `;
-
-  return newItem;
 }
 
+// Remove one item from cart by array index, save, and re-render
+function removeItemFromCart(index) {
+  const cartItems = getLocalStorage("so-cart") || [];
+  cartItems.splice(index, 1);
+  setLocalStorage("so-cart", cartItems);
+  renderCartContents();
+}
+
+// Empty the entire cart and re-render
+function emptyCart() {
+  setLocalStorage("so-cart", []);
+  renderCartContents();
+}
+
+// Setup empty cart button listener
+document.getElementById("empty-cart-btn").addEventListener("click", () => {
+  emptyCart();
+});
+
+// Initial rendering of cart on page load
 renderCartContents();
