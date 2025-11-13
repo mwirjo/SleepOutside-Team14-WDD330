@@ -1,5 +1,5 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-const BASE_IMAGE_PATH = "../public/";
+
 
 export default class ProductDetails {
     constructor(productId, dataSource){
