@@ -1,5 +1,6 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs"; // Make sure setLocalStorage is defined properly
+import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs"; // Make sure setLocalStorage is defined properly
 
+loadHeaderFooter();
 // Render cart contents, showing items and total or empty message
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
