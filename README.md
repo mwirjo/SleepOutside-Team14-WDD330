@@ -25,4 +25,4 @@ _BYU-Pathway Worldwide improves lives through access to spiritually based, onlin
 
 
 Netlify App Link:
-https://6903cfdf8416c50e65fb24a6--tiny-tapioca-8ce648.netlify.app/
+https://tiny-tapioca-8ce648.netlify.app
