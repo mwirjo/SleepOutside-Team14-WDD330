@@ -265,3 +265,19 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+.empty-cart-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #303030;
+    /* Use your dark olive green for background */
+    color: #f0a868;
+    /* Your warm orange primary color for text */
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 8px;
+  border: 3px solid #f0a868;
+  font-size: 1.2em;
+  gap: 0.5em;
+}
+
