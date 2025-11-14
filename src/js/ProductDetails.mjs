@@ -35,7 +35,16 @@ function productDetailsTemplate(product) {
   document.querySelector("h3").textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById("productImage");
-  productImage.src = product.Image;
+
+  // ✅ Fix image path here
+  let imagePath = product.Image || "";
+  if (imagePath.startsWith("../images/")) {
+    imagePath = imagePath.replace("../images/", "/images/");
+  } else if (imagePath && !imagePath.startsWith("/") && !imagePath.startsWith("http")) {
+    imagePath = `/images/${imagePath}`;
+  }
+
+  productImage.src = imagePath;
   productImage.alt = product.NameWithoutBrand; 
 
   document.getElementById("productPrice").textContent = product.FinalPrice;

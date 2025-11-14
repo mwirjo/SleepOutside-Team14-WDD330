@@ -265,3 +265,22 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+
+.product-rating {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;        /* spacing between stars */
+}
+
+.rating-star {
+  display: inline-flex;
+  padding: 7px;
+  margin-top: 10px;
+
+  cursor: pointer;
+  font-size: 1.2rem;   /* adjust star size */
+  line-height: 1;
+}
+
+
