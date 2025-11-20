@@ -36,11 +36,11 @@ function productDetailsTemplate(product) {
 
   
   document.querySelector("h2").textContent = product.Brand.Name;
-  document.querySelector("h3").textContent = product.NameWithoutBrand;
+  document.querySelector("p").textContent = product.NameWithoutBrand;
 
   const productImage = document.getElementById("productImage");
-  productImage.src = product.Image;
-  productImage.alt = product.NameWithoutBrand;
+  productImage.src = product.Images.PrimaryMedium;
+  productImage.alt = product.Name;
 
   document.getElementById("productPrice").textContent = product.FinalPrice;
   document.getElementById("productColor").textContent = product.Colors[0].ColorName;
