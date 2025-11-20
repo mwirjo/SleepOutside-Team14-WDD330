@@ -20,8 +20,20 @@ export default class ProductDetails {
 
     addProductToCart() {
     const cartItems = getLocalStorage("so-cart") || [];
-    cartItems.push(this.product);
-    setLocalStorage("so-cart", cartItems);
+     // Check if product already exists in cart by id (and optionally color/size)
+    const uniqueKey = `${this.product.id}-${this.product.Colors?.[0]?.ColorName || "default"}`;
+
+  const existingItem = cartItems.find(
+    (item) => item.uniqueKey === uniqueKey
+  );
+
+  if (existingItem) {
+    existingItem.quantity += 1; // increment quantity
+  } else {
+    cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
+  }
+
+  setLocalStorage("so-cart", cartItems);
   }
 
     
