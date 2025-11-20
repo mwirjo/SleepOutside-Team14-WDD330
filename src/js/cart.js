@@ -1,42 +1,46 @@
-import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs"; // Make sure setLocalStorage is defined properly
+import { loadHeaderFooter } from "./utils.mjs";
+import ShoppingCart from "./shoppingCart.mjs";
 
 loadHeaderFooter();
 
-// Render cart contents, showing items and total or empty message
-function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart") || [];
-  const productListElem = document.querySelector(".product-list");
+const cart = new ShoppingCart("so-cart");
+
+function renderCart() {
+  const productListElem = document.querySelector(".cart-list");
   const cartFooter = document.querySelector(".cart-footer");
   const cartTotalElem = document.querySelector(".cart-total");
 
-  if (cartItems.length === 0) {
+  const items = cart.getItems();
+
+  // If empty cart
+  if (items.length === 0) {
     productListElem.innerHTML = `
       <li class="empty-cart-message">Your cart is currently empty.</li>
     `;
     cartFooter.style.visibility = "hidden";
-    return 0;
+    return;
   }
 
-  // Render cart items
-  const htmlItems = cartItems.map((item, index) => cartItemTemplate(item, index));
-  productListElem.innerHTML = htmlItems.join("");
+  // Render items
+  productListElem.innerHTML = items
+    .map((item, index) => cartItemTemplate(item, index))
+    .join("");
 
-  // Add event listeners for remove buttons
+  // Add remove button events
   document.querySelectorAll(".remove-item-btn").forEach((button) => {
     button.addEventListener("click", (e) => {
       const idx = parseInt(e.target.dataset.index, 10);
-      removeItemFromCart(idx);
+      cart.removeItem(idx);       // Remove from ShoppingCart
+      renderCart();               // Re-render UI
     });
   });
 
-  // Calculate and show total
-  const total = cartItems.reduce((accumulator, item) => accumulator + item.FinalPrice, 0);
+  // Show total
   cartFooter.style.visibility = "visible";
-  cartTotalElem.textContent = `Total: $${total.toFixed(2)}`;
-
-  return total;
+  cartTotalElem.textContent = `Total: $${cart.getTotal().toFixed(2)}`;
 }
-//** fied images */
+
+// Template for each cart item
 function cartItemTemplate(item, index) {
   return `
     <li class="cart-card divider">
@@ -58,31 +62,16 @@ function cartItemTemplate(item, index) {
       <p class="cart-card__color">${item.Colors[0].ColorName}</p>
       <p class="cart-card__quantity">qty: ${item.quantity}</p>
       <p class="cart-card__price">$${item.FinalPrice}</p>
-      <button class="remove-item-btn" data-index="${index}" type="button">Remove</button>
+      <button class="remove-item-btn" data-index="${index}">Remove</button>
     </li>
   `;
 }
 
-
-
-// Remove one item from cart by array index, save, and re-render
-function removeItemFromCart(index) {
-  const cartItems = getLocalStorage("so-cart") || [];
-  cartItems.splice(index, 1);
-  setLocalStorage("so-cart", cartItems);
-  renderCartContents();
-}
-
-// Empty the entire cart and re-render
-function emptyCart() {
-  setLocalStorage("so-cart", []);
-  renderCartContents();
-}
-
-// Setup empty cart button listener
+// Empty cart button
 document.getElementById("empty-cart-btn").addEventListener("click", () => {
-  emptyCart();
+  cart.empty();
+  
 });
 
-// Initial rendering of cart on page load
-renderCartContents();
+// Initial render
+renderCart();
