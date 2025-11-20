@@ -6,7 +6,6 @@ export default class Alert {
         
         if (response.ok) {
             const result = await response.json();
-            console.log(result);
             this.renderAlert(result);
         }
        

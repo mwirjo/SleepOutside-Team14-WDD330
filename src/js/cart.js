@@ -35,14 +35,21 @@ function renderCartContents() {
 
   return total;
 }
-
-// Cart item HTML template with remove button including data-index
+//** fied images */
 function cartItemTemplate(item, index) {
-  
   return `
     <li class="cart-card divider">
       <a href="#" class="cart-card__image">
-        <img src="${item.Image}" alt="${item.Name}" />
+        <img 
+          src="${
+            item.Images?.PrimaryExtraLarge ||
+            item.Images?.PrimaryLarge ||
+            item.Images?.PrimaryMedium ||
+            item.Image ||
+            "../images/fallback.jpg"
+          }" 
+          alt="${item.Name}" 
+        />
       </a>
       <a href="#">
         <h2 class="card__name">${item.Name}</h2>
@@ -54,6 +61,8 @@ function cartItemTemplate(item, index) {
     </li>
   `;
 }
+
+
 
 // Remove one item from cart by array index, save, and re-render
 function removeItemFromCart(index) {
