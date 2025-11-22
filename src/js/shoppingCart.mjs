@@ -31,7 +31,7 @@ export default class ShoppingCart {
   // Calculate total price
   getTotal() {
     return this.items.reduce(
-      (total, item) => total + item.FinalPrice,
+      (total, item) => total + item.FinalPrice * item.quantity,
       0
     );
   }

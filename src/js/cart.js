@@ -63,6 +63,7 @@ function cartItemTemplate(item, index) {
       <p class="cart-card__quantity">qty: ${item.quantity}</p>
       <p class="cart-card__price">$${item.FinalPrice}</p>
       <button class="remove-item-btn" data-index="${index}">Remove</button>
+      
     </li>
   `;
 }
@@ -72,6 +73,11 @@ document.getElementById("empty-cart-btn").addEventListener("click", () => {
   cart.empty();
   
 });
+
+document.getElementById("checkout-btn").addEventListener("click", () => {
+  window.location.href = "/checkout/index.html";
+});
+
 
 // Initial render
 renderCart();
