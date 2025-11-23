@@ -19,23 +19,30 @@ export default class ProductDetails {
     }
 
     addProductToCart() {
-    const cartItems = getLocalStorage("so-cart") || [];
-     // Check if product already exists in cart by id (and optionally color/size)
-    const uniqueKey = `${this.product.id}-${this.product.Colors?.[0]?.ColorName || "default"}`;
+      const cartItems = getLocalStorage("so-cart") || [];
+      // Check if product already exists in cart by id (and optionally color/size)
+      const uniqueKey = `${this.product.id}-${this.product.Colors?.[0]?.ColorName || "default"}`;
 
-  const existingItem = cartItems.find(
-    (item) => item.uniqueKey === uniqueKey
-  );
+      const existingItem = cartItems.find(
+        (item) => item.uniqueKey === uniqueKey
+      );
 
-  if (existingItem) {
-    existingItem.quantity += 1; // increment quantity
-  } else {
-    cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
-  }
+      if (existingItem) {
+        existingItem.quantity += 1; // increment quantity
+      } else {
+        cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
+      }
 
-  setLocalStorage("so-cart", cartItems);
-  }
+      setLocalStorage("so-cart", cartItems);
+      this.animateCart();
+  
+    }
 
+    // does not work on repeat clicks unless you reload the page :(
+    animateCart() {
+      const cartLogo = document.querySelector("#cart-logo");
+      cartLogo.style.animation = "0.6s linear 0s 1 cartbling";
+    }
     
     renderProductDetails() {
         productDetailsTemplate(this.product);
