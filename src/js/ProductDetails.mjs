@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage,alertMessage } from "./utils.mjs";
 
 
 
@@ -27,11 +27,13 @@ export default class ProductDetails {
         (item) => item.uniqueKey === uniqueKey
       );
 
-      if (existingItem) {
-        existingItem.quantity += 1; // increment quantity
-      } else {
-        cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
-      }
+  if (existingItem) {
+    existingItem.quantity += 1; // increment quantity
+    alertMessage(`Added another ${this.product.NameWithoutBrand} to your cart!`);
+  } else {
+    cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
+    alertMessage(`${this.product.NameWithoutBrand} added to cart!`);
+  }
 
       setLocalStorage("so-cart", cartItems);
       this.animateCart();

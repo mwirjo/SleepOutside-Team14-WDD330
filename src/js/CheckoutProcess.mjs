@@ -1,4 +1,5 @@
-import { getLocalStorage } from "./utils.mjs";
+import {setLocalStorage, getLocalStorage,alertMessage,
+  removeAllAlerts, } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 const services = new ExternalServices();
@@ -84,19 +85,27 @@ export default class CheckoutProcess {
 
   async checkout() {
     const formElement = document.forms["checkout"];
-    const order = formDataToJSON(formElement);
 
-    order.orderDate = new Date().toISOString();
-    order.orderTotal = this.orderTotal;
-    order.tax = this.tax;
-    order.shipping = this.shipping;
-    order.items = packageItems(this.list);
-    //console.log(order);
-
+    const json = formDataToJSON(formElement);
+    // add totals, and item details
+    json.orderDate = new Date();
+    json.orderTotal = this.orderTotal;
+    json.tax = this.tax;
+    json.shipping = this.shipping;
+    json.items = packageItems(this.list);
+    console.log(json);
     try {
-      const response = await services.checkout(order);
-      console.log(response);
+      const res = await services.checkout(json);
+      console.log(res);
+      setLocalStorage("so-cart", []);
+      location.assign("/checkout/success.html");
     } catch (err) {
+      // get rid of any preexisting alerts.
+      removeAllAlerts();
+      for (let message in err.message) {
+        alertMessage(err.message[message]);
+      }
+
       console.log(err);
     }
   }
