@@ -1,14 +1,15 @@
 const baseURL = import.meta.env.VITE_SERVER_URL
 
-function convertToJson(res) {
+async function convertToJson(res) {
+  const data = await res.json();
   if (res.ok) {
-    return res.json();
+    return data;
   } else {
-    throw new Error("Bad Response");
+    throw { name: "servicesError", message: data };
   }
 }
 
-export default class ProductData {
+export default class ExternalServices {
   constructor() {
     
   } // removed ../public because the vite(?) server was complaining and I couldn't add to cart
@@ -23,4 +24,16 @@ export default class ProductData {
 
     return data.Result;
   }
+
+  async checkout(payload) {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    };
+    return await fetch(`${baseURL}checkout/`, options).then(convertToJson);
+  }
+
 }

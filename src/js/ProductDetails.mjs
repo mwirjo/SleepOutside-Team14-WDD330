@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage,alertMessage } from "./utils.mjs";
 
 
 
@@ -19,23 +19,32 @@ export default class ProductDetails {
     }
 
     addProductToCart() {
-    const cartItems = getLocalStorage("so-cart") || [];
-     // Check if product already exists in cart by id (and optionally color/size)
-    const uniqueKey = `${this.product.id}-${this.product.Colors?.[0]?.ColorName || "default"}`;
+      const cartItems = getLocalStorage("so-cart") || [];
+      // Check if product already exists in cart by id (and optionally color/size)
+      const uniqueKey = `${this.product.id}-${this.product.Colors?.[0]?.ColorName || "default"}`;
 
-  const existingItem = cartItems.find(
-    (item) => item.uniqueKey === uniqueKey
-  );
+      const existingItem = cartItems.find(
+        (item) => item.uniqueKey === uniqueKey
+      );
 
   if (existingItem) {
     existingItem.quantity += 1; // increment quantity
+    alertMessage(`Added another ${this.product.NameWithoutBrand} to your cart!`);
   } else {
     cartItems.push({ ...this.product, quantity: 1, uniqueKey }); // add uniqueKey
+    alertMessage(`${this.product.NameWithoutBrand} added to cart!`);
   }
 
-  setLocalStorage("so-cart", cartItems);
-  }
+      setLocalStorage("so-cart", cartItems);
+      this.animateCart();
+  
+    }
 
+    // does not work on repeat clicks unless you reload the page :(
+    animateCart() {
+      const cartLogo = document.querySelector("#cart-logo");
+      cartLogo.style.animation = "0.6s linear 0s 1 cartbling";
+    }
     
     renderProductDetails() {
         productDetailsTemplate(this.product);
@@ -53,11 +62,7 @@ function productDetailsTemplate(product) {
   const productImage = document.querySelector("#p-image");
   productImage.src = product.Images.PrimaryExtraLarge;
   productImage.alt = product.NameWithoutBrand;
-  const euroPrice = new Intl.NumberFormat("de-DE",
-    {
-      style: "currency", currency: "EUR",
-    }).format(Number(product.FinalPrice) * 0.85);
-  document.querySelector("#p-price").textContent = `${euroPrice}`;
+  document.querySelector("#p-price").textContent = `${product.FinalPrice}`;
   document.querySelector("#p-color").textContent = product.Colors[0].ColorName;
   document.querySelector("#p-description").innerHTML = product.DescriptionHtmlSimple;
 
