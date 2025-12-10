@@ -34,6 +34,16 @@ function renderCart() {
       renderCart();               // Re-render UI
     });
   });
+  // Quantity change event
+  document.querySelectorAll(".qty-input").forEach((input) => {
+    input.addEventListener("change", (e) => {
+      const idx = parseInt(e.target.dataset.index, 10);
+      const newQty = e.target.value;
+
+      cart.updateQuantity(idx, newQty);
+      renderCart(); // Re-render to update totals
+    });
+  });
 
   // Show total
   cartFooter.style.visibility = "visible";
@@ -60,8 +70,17 @@ function cartItemTemplate(item, index) {
         <h2 class="card__name">${item.Name}</h2>
       </a>
       <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-      <p class="cart-card__quantity">qty: ${item.quantity}</p>
-      <p class="cart-card__price">$${item.FinalPrice}</p>
+      <div class="cart-card__quantity">
+        <label>Qty:</label>
+        <input type="number" 
+              class="qty-input" 
+              data-index="${index}" 
+              min="1" 
+              value="${item.quantity}">
+        <p class="cart-card__price">Unit Price: $${item.FinalPrice.toFixed(2)}</p>
+        <p class="cart-card__line-total">Total: $${(item.FinalPrice * item.quantity).toFixed(2)}
+      </div>
+      </p>
       <button class="remove-item-btn" data-index="${index}">Remove</button>
       
     </li>

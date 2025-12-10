@@ -2,9 +2,13 @@ import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ShoppingCart {
   constructor(key = "so-cart") {
-    this.key = key;
-    this.items = getLocalStorage(this.key) || [];
-  }
+  this.key = key;
+  this.items = getLocalStorage(this.key) || [];
+  // Ensure every item has quantity
+  this.items.forEach(item => {
+    if (!item.quantity) item.quantity = 1;
+  });
+}
 
   // Return all items
   getItems() {
@@ -34,5 +38,13 @@ export default class ShoppingCart {
       (total, item) => total + item.FinalPrice * item.quantity,
       0
     );
+
   }
+    // Update quantity of an item
+  updateQuantity(index, newQty) {
+    const qty = Math.max(1, parseInt(newQty, 10));
+    this.items[index].quantity = qty;
+    this.save();
+  }
+
 }
